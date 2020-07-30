@@ -4,8 +4,6 @@ import br.com.sfc.tddudm.entidades.Filme;
 import br.com.sfc.tddudm.entidades.Locacao;
 import br.com.sfc.tddudm.entidades.Usuario;
 import br.com.sfc.tddudm.utils.DataUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 

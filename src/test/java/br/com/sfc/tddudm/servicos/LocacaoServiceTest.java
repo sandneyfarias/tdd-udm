@@ -3,12 +3,16 @@ package br.com.sfc.tddudm.servicos;
 import br.com.sfc.tddudm.entidades.Filme;
 import br.com.sfc.tddudm.entidades.Locacao;
 import br.com.sfc.tddudm.entidades.Usuario;
-import br.com.sfc.tddudm.servicos.LocacaoService;
 import br.com.sfc.tddudm.utils.DataUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LocacaoServiceTest {
 
@@ -23,11 +27,10 @@ public class LocacaoServiceTest {
         Locacao locacao = service.alugarFilme(usuario, filme);
 
         //Verificação
-        Assertions.assertEquals(4.0, locacao.getValor(), 0.01);
-        Assertions.assertTrue(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
-        Assertions.assertTrue(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
-
+        assertThat(locacao.getValor(), is(equalTo(4.0)));
+        assertEquals(4.0, locacao.getValor(), 0.01);
+        assertTrue(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
+        assertTrue(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
     }
-
 
 }
