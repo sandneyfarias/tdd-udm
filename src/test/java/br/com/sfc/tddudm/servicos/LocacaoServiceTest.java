@@ -3,8 +3,9 @@ package br.com.sfc.tddudm.servicos;
 import br.com.sfc.tddudm.entidades.Filme;
 import br.com.sfc.tddudm.entidades.Locacao;
 import br.com.sfc.tddudm.entidades.Usuario;
+import br.com.sfc.tddudm.excepions.FilmeSemEstoqueException;
+import br.com.sfc.tddudm.excepions.LocadoraException;
 import br.com.sfc.tddudm.utils.DataUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -34,7 +35,6 @@ public class LocacaoServiceTest {
         assertTrue(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
     }
 
-    // Forma elegante
     @Test
     public void testLocacaoFilmeSemEstoque() throws Exception {
         //Cenário
@@ -43,25 +43,41 @@ public class LocacaoServiceTest {
         Filme filme = new Filme("Filme 1", 0, 4.0);
 
         //Ação
-        assertThrows(Exception.class, () -> {
+        assertThrows(FilmeSemEstoqueException.class, () -> {
             service.alugarFilme(usuario, filme);
         });
     }
 
     @Test
-    public void testLocacaoFilmeSemEstoqueRobusta() {
+    public void testLocacaoUsuarioVazio() throws FilmeSemEstoqueException {
+        //Cenário
+        LocacaoService service = new LocacaoService();
+        Filme filme = new Filme("Filme 1", 2, 4.0);
+
+        Exception exception = assertThrows(LocadoraException.class, () -> {
+            service.alugarFilme(null, filme);
+        });
+
+        String expectedMessage = "Usuário vazio";
+        String actualMessage = exception.getMessage();
+
+        assertThat(actualMessage, is(equalTo(expectedMessage)));
+    }
+
+    @Test
+    public void testLocacaoFilmeVazio() throws FilmeSemEstoqueException {
         //Cenário
         LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario();
-        Filme filme = new Filme("Filme 1", 0, 4.0);
 
-        //Ação
-        try {
-            service.alugarFilme(usuario, filme);
-            Assertions.fail("Deveria ter chamado uma exceção");
-        } catch (Exception e) {
-            assertThat(e.getMessage(), is("Filme sem estoque"));
-        }
+        Exception exception = assertThrows(LocadoraException.class, () -> {
+            service.alugarFilme(usuario, null);
+        });
+
+        String expectedMessage = "Filme vazio";
+        String actualMessage = exception.getMessage();
+
+        assertThat(actualMessage, is(equalTo(expectedMessage)));
     }
 
 }
