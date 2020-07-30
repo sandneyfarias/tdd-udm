@@ -6,7 +6,7 @@ import br.com.sfc.tddudm.entidades.Usuario;
 import br.com.sfc.tddudm.excepions.FilmeSemEstoqueException;
 import br.com.sfc.tddudm.excepions.LocadoraException;
 import br.com.sfc.tddudm.utils.DataUtils;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Date;
 
@@ -18,10 +18,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LocacaoServiceTest {
 
+    private LocacaoService service;
+
+    @BeforeEach
+    public void before() {
+        this.service = new LocacaoService();
+    }
+
     @Test
     public void testLocacao() throws Exception {
         //Cenário
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario();
         Filme filme = new Filme("Filme 1", 2, 4.0);
 
@@ -38,7 +44,6 @@ public class LocacaoServiceTest {
     @Test
     public void testLocacaoFilmeSemEstoque() throws Exception {
         //Cenário
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario();
         Filme filme = new Filme("Filme 1", 0, 4.0);
 
@@ -51,7 +56,6 @@ public class LocacaoServiceTest {
     @Test
     public void testLocacaoUsuarioVazio() throws FilmeSemEstoqueException {
         //Cenário
-        LocacaoService service = new LocacaoService();
         Filme filme = new Filme("Filme 1", 2, 4.0);
 
         Exception exception = assertThrows(LocadoraException.class, () -> {
@@ -67,7 +71,6 @@ public class LocacaoServiceTest {
     @Test
     public void testLocacaoFilmeVazio() throws FilmeSemEstoqueException {
         //Cenário
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario();
 
         Exception exception = assertThrows(LocadoraException.class, () -> {
