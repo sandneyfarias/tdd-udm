@@ -8,42 +8,48 @@ import br.com.sfc.tddudm.excepions.LocadoraException;
 import br.com.sfc.tddudm.utils.DataUtils;
 
 import java.util.Date;
+import java.util.List;
 
 public class LocacaoService {
-	
-	public Locacao alugarFilme(Usuario usuario, Filme filme) throws Exception {
 
-		if (usuario == null) {
-			throw new LocadoraException("Usuário vazio");
-		}
+    public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws Exception {
 
-		if (filme == null) {
-			throw new LocadoraException("Filme vazio");
-		}
+        if (usuario == null) {
+            throw new LocadoraException("Usuário vazio");
+        }
 
-		if (filme.getEstoque().equals(0)) {
-			throw new FilmeSemEstoqueException();
-		}
+        if (filmes == null || filmes.isEmpty()) {
+            throw new LocadoraException("Filme vazio");
+        }
 
-		Locacao locacao = new Locacao();
-		locacao.setFilme(filme);
-		locacao.setUsuario(usuario);
-		locacao.setDataLocacao(new Date());
-		locacao.setValor(filme.getPrecoLocacao());
+        Double valor = 0.0;
+        for (Filme filme : filmes) {
+            if (filme.getEstoque().equals(0)) {
+                throw new FilmeSemEstoqueException();
+            } else {
+                valor +=   filme.getPrecoLocacao();
+            }
+        }
 
-		//Entrega no dia seguinte
-		Date dataEntrega = new Date();
-		dataEntrega = DataUtils.adicionarDias(dataEntrega, 1);
-		locacao.setDataRetorno(dataEntrega);
-		
-		//Salvando a locacao...	
-		//TODO adicionar método para salvar
-		
-		return locacao;
-	}
+        Locacao locacao = new Locacao();
+        locacao.setFilmes(filmes);
+        locacao.setUsuario(usuario);
+        locacao.setDataLocacao(new Date());
+        locacao.setValor(valor);
+
+        //Entrega no dia seguinte
+        Date dataEntrega = new Date();
+        dataEntrega = DataUtils.adicionarDias(dataEntrega, 1);
+        locacao.setDataRetorno(dataEntrega);
+
+        //Salvando a locacao...
+        //TODO adicionar método para salvar
+
+        return locacao;
+    }
 
 
-	public static void main(String[] args) {
-		
-	}
+    public static void main(String[] args) {
+
+    }
 }

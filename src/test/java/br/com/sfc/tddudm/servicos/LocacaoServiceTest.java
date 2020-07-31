@@ -8,7 +8,9 @@ import br.com.sfc.tddudm.excepions.LocadoraException;
 import br.com.sfc.tddudm.utils.DataUtils;
 import org.junit.jupiter.api.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -29,14 +31,18 @@ public class LocacaoServiceTest {
     public void testLocacao() throws Exception {
         //Cenário
         Usuario usuario = new Usuario();
-        Filme filme = new Filme("Filme 1", 2, 4.0);
+        Filme filme1 = new Filme("Filme 1", 2, 4.0);
+        Filme filme2 = new Filme("Filme 2", 2, 4.0);
+        List<Filme> filmes = new ArrayList<>();
+        filmes.add(filme1);
+        filmes.add(filme2);
 
         //Ação
         Locacao locacao;
-        locacao = service.alugarFilme(usuario, filme);
+        locacao = service.alugarFilme(usuario, filmes);
 
         //Verificação
-        assertThat(locacao.getValor(), is(equalTo(4.0)));
+        assertThat(locacao.getValor(), is(equalTo(8.0)));
         assertTrue(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
         assertTrue(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
     }
@@ -45,21 +51,29 @@ public class LocacaoServiceTest {
     public void testLocacaoFilmeSemEstoque() throws Exception {
         //Cenário
         Usuario usuario = new Usuario();
-        Filme filme = new Filme("Filme 1", 0, 4.0);
+        Filme filme1 = new Filme("Filme 1", 0, 4.0);
+        Filme filme2 = new Filme("Filme 2", 0, 4.0);
+        List<Filme> filmes = new ArrayList<>();
+        filmes.add(filme1);
+        filmes.add(filme2);
 
         //Ação
         assertThrows(FilmeSemEstoqueException.class, () -> {
-            service.alugarFilme(usuario, filme);
+            service.alugarFilme(usuario, filmes);
         });
     }
 
     @Test
     public void testLocacaoUsuarioVazio() throws FilmeSemEstoqueException {
         //Cenário
-        Filme filme = new Filme("Filme 1", 2, 4.0);
+        Filme filme1 = new Filme("Filme 1", 2, 4.0);
+        Filme filme2 = new Filme("Filme 2", 2, 4.0);
+        List<Filme> filmes = new ArrayList<>();
+        filmes.add(filme1);
+        filmes.add(filme2);
 
         Exception exception = assertThrows(LocadoraException.class, () -> {
-            service.alugarFilme(null, filme);
+            service.alugarFilme(null, filmes);
         });
 
         String expectedMessage = "Usuário vazio";
