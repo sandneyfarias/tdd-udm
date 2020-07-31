@@ -9,6 +9,7 @@ import br.com.sfc.tddudm.utils.DataUtils;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class LocacaoServiceTest {
     }
 
     @Test
-    public void testLocacao() throws Exception {
+    public void deveAlugarFilme() throws Exception {
         //Cenário
         Usuario usuario = new Usuario();
         Filme filme1 = new Filme("Filme 1", 2, 4.0);
@@ -48,7 +49,7 @@ public class LocacaoServiceTest {
     }
 
     @Test
-    public void testLocacaoFilmeSemEstoque() throws Exception {
+    public void deveLancarExcecaoAoAlugarFilmeSemEstoque() throws Exception {
         //Cenário
         Usuario usuario = new Usuario();
         Filme filme1 = new Filme("Filme 1", 0, 4.0);
@@ -64,7 +65,7 @@ public class LocacaoServiceTest {
     }
 
     @Test
-    public void testLocacaoUsuarioVazio() throws FilmeSemEstoqueException {
+    public void naoDeveAlugarFilmeSemUsuario() {
         //Cenário
         Filme filme1 = new Filme("Filme 1", 2, 4.0);
         Filme filme2 = new Filme("Filme 2", 2, 4.0);
@@ -83,7 +84,7 @@ public class LocacaoServiceTest {
     }
 
     @Test
-    public void testLocacaoFilmeVazio() throws FilmeSemEstoqueException {
+    public void naoDeveAlugarFilmeSemFilme() {
         //Cenário
         Usuario usuario = new Usuario();
 
@@ -95,6 +96,72 @@ public class LocacaoServiceTest {
         String actualMessage = exception.getMessage();
 
         assertThat(actualMessage, is(equalTo(expectedMessage)));
+    }
+
+    @Test
+    public void devePagar75PctNoFilme3() throws Exception {
+        // Cenário
+        Usuario usuario = new Usuario();
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0),
+                new Filme("Filme 2", 2, 4.0),
+                new Filme("Filme 3", 2, 4.0));
+
+        // Ação
+        Locacao resultado = service.alugarFilme(usuario, filmes);
+
+        // Verificação
+        assertThat(resultado.getValor(), is(equalTo(11.0)));
+    }
+
+    @Test
+    public void devePagar50PctNoFilme4() throws Exception {
+        // Cenário
+        Usuario usuario = new Usuario();
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0),
+                new Filme("Filme 2", 2, 4.0),
+                new Filme("Filme 3", 2, 4.0),
+                new Filme("Filme 4", 2, 4.0));
+
+        // Ação
+        Locacao resultado = service.alugarFilme(usuario, filmes);
+
+        // Verificação
+        assertThat(resultado.getValor(), is(equalTo(13.0)));
+    }
+
+    @Test
+    public void devePagar25PctNoFilme5() throws Exception {
+        // Cenário
+        Usuario usuario = new Usuario();
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0),
+                new Filme("Filme 2", 2, 4.0),
+                new Filme("Filme 3", 2, 4.0),
+                new Filme("Filme 4", 2, 4.0),
+                new Filme("Filme 5", 2, 4.0));
+
+        // Ação
+        Locacao resultado = service.alugarFilme(usuario, filmes);
+
+        // Verificação
+        assertThat(resultado.getValor(), is(equalTo(14.0)));
+    }
+
+    @Test
+    public void devePagar0PctNoFilme6() throws Exception {
+        // Cenário
+        Usuario usuario = new Usuario();
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0),
+                new Filme("Filme 2", 2, 4.0),
+                new Filme("Filme 3", 2, 4.0),
+                new Filme("Filme 4", 2, 4.0),
+                new Filme("Filme 5", 2, 4.0),
+                new Filme("Filme 6", 2, 4.0));
+
+        // Ação
+        Locacao resultado = service.alugarFilme(usuario, filmes);
+
+        // Verificação
+        assertThat(resultado.getValor(), is(equalTo(14.0)));
     }
 
 }
