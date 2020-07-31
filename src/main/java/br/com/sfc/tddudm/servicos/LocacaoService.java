@@ -7,6 +7,7 @@ import br.com.sfc.tddudm.excepions.FilmeSemEstoqueException;
 import br.com.sfc.tddudm.excepions.LocadoraException;
 import br.com.sfc.tddudm.utils.DataUtils;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -44,11 +45,7 @@ public class LocacaoService {
         locacao.setUsuario(usuario);
         locacao.setDataLocacao(new Date());
         locacao.setValor(valor);
-
-        //Entrega no dia seguinte
-        Date dataEntrega = new Date();
-        dataEntrega = DataUtils.adicionarDias(dataEntrega, 1);
-        locacao.setDataRetorno(dataEntrega);
+        locacao.setDataRetorno(calcularDataRetorno());
 
         //Salvando a locacao...
         //TODO adicionar método para salvar
@@ -103,6 +100,17 @@ public class LocacaoService {
         }
 
         return totalLocacao;
+    }
+
+    private Date calcularDataRetorno() {
+        Date dataEntrega = new Date();
+        dataEntrega = DataUtils.adicionarDias(dataEntrega, 1);
+
+        if (DataUtils.verificarDiaSemana(dataEntrega, Calendar.SUNDAY)) {
+            dataEntrega = DataUtils.adicionarDias(dataEntrega, 1);
+        }
+
+        return dataEntrega;
     }
 
 }

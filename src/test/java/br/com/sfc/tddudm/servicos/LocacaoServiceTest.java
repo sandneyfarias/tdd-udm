@@ -8,10 +8,7 @@ import br.com.sfc.tddudm.excepions.LocadoraException;
 import br.com.sfc.tddudm.utils.DataUtils;
 import org.junit.jupiter.api.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -30,6 +27,8 @@ public class LocacaoServiceTest {
 
     @Test
     public void deveAlugarFilme() throws Exception {
+        Assumptions.assumeFalse(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
+
         //Cenário
         Usuario usuario = new Usuario();
         Filme filme1 = new Filme("Filme 1", 2, 4.0);
@@ -162,6 +161,20 @@ public class LocacaoServiceTest {
 
         // Verificação
         assertThat(resultado.getValor(), is(equalTo(14.0)));
+    }
+
+    @Test
+    public void deveDevolverNaSegundaAoAlugarNoSabado() throws Exception {
+        Assumptions.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
+
+        Usuario usuario = new Usuario();
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0));
+
+        Locacao retorno = service.alugarFilme(usuario, filmes);
+
+        boolean ehSegunda = DataUtils.verificarDiaSemana(retorno.getDataRetorno(), Calendar.MONDAY);
+
+        Assertions.assertTrue(ehSegunda);
     }
 
 }
