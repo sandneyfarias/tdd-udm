@@ -5,11 +5,15 @@ import br.com.sfc.tddudm.entidades.Locacao;
 import br.com.sfc.tddudm.entidades.Usuario;
 import br.com.sfc.tddudm.excepions.FilmeSemEstoqueException;
 import br.com.sfc.tddudm.excepions.LocadoraException;
+import br.com.sfc.tddudm.matchers.DiaSemanaMatcher;
+import br.com.sfc.tddudm.matchers.MatchersProprias;
 import br.com.sfc.tddudm.utils.DataUtils;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
 
+import static br.com.sfc.tddudm.matchers.MatchersProprias.caiEm;
+import static br.com.sfc.tddudm.matchers.MatchersProprias.caiNumaSegunda;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -108,7 +112,7 @@ public class LocacaoServiceTest {
 
         boolean ehSegunda = DataUtils.verificarDiaSemana(retorno.getDataRetorno(), Calendar.MONDAY);
 
-        Assertions.assertTrue(ehSegunda);
+        assertThat(retorno.getDataRetorno(), caiNumaSegunda());
     }
 
 }
